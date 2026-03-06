@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake Game + Live Workshop Leaderboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="game-panel">
+        <header>
+          <h1>Snake Game + Live Workshop Leaderboard</h1>
+          <p class="subtitle">Eat food, grow longer, avoid crashing. 10 points per food.</p>
+        </header>
+
+        <canvas id="glCanvas" width="720" height="720" aria-label="Snake game board"></canvas>
+
+        <div class="hud">
+          <div class="pill">Score: <span id="score">0</span></div>
+          <div class="pill">High Score: <span id="highScore">0</span></div>
+          <div class="pill">Status: <span id="status">Running</span></div>
+          <div class="pill">Active Power: <span id="power">None</span></div>
+        </div>
+
+        <div class="controls">
+          <button id="restartBtn" type="button">Restart</button>
+          <button id="pauseBtn" type="button">Pause</button>
+        </div>
+
+        <p class="tips">
+          Controls: Arrow keys or WASD. Press Space to pause/resume.
+        </p>
+      </section>
+
+      <aside class="leaderboard-panel">
+        <h2>Workshop Leaderboard</h2>
+        <p class="subtitle">Submit your best score to the live board.</p>
+
+        <label for="playerName">Player Name</label>
+        <input id="playerName" maxlength="32" placeholder="YourName" />
+
+        <div class="controls">
+          <button id="submitBtn" type="button">Submit Score</button>
+          <button id="refreshBtn" type="button">Refresh</button>
+        </div>
+
+        <p class="small" id="submitMessage">Ready.</p>
+
+        <ol id="leaderboardList" class="board-list"></ol>
+      </aside>
+    </main>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

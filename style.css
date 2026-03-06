@@ -1,0 +1,149 @@
+:root {
+  --bg: #07161d;
+  --card: #0f2733;
+  --card-2: #163849;
+  --text: #d7edf6;
+  --muted: #9cc7d6;
+  --accent: #00c68c;
+  --danger: #ff5f5f;
+  --line: #265365;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 900px at 100% -10%, #18495b 0%, transparent 52%),
+    radial-gradient(1000px 700px at -10% 110%, #123a4c 0%, transparent 48%),
+    var(--bg);
+}
+
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1.6fr 1fr;
+}
+
+.game-panel,
+.leaderboard-panel {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(165deg, var(--card), var(--card-2));
+  padding: 1rem;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0.35rem 0 1rem;
+  color: var(--muted);
+}
+
+#glCanvas {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 1;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #071119;
+}
+
+.hud,
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #0d2330;
+}
+
+button,
+input {
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  padding: 0.5rem 0.65rem;
+  font: inherit;
+}
+
+button {
+  color: #06281a;
+  background: linear-gradient(180deg, #4df0bd, var(--accent));
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.05);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button.secondary {
+  background: linear-gradient(180deg, #b9e4ff, #87c5e6);
+}
+
+input {
+  width: 100%;
+  color: var(--text);
+  background: #0a202a;
+}
+
+.small,
+.tips {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.board-list {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.board-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.board-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.board-score {
+  color: #8bffdb;
+  font-weight: 700;
+}
+
+.error {
+  color: var(--danger);
+}
+
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

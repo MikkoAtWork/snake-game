@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake Workshop Leaderboard Viewer</title>
+    <style>
+      :root {
+        --bg: #05131a;
+        --card: #0f2835;
+        --line: #2b596b;
+        --text: #ddf4ff;
+        --muted: #9bc8d8;
+        --score: #84ffd5;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(1000px 700px at 120% -5%, #1a4f61 0%, transparent 45%),
+          radial-gradient(900px 700px at -20% 120%, #133e50 0%, transparent 40%),
+          var(--bg);
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+      }
+
+      .panel {
+        width: min(740px, 100%);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: linear-gradient(165deg, #0c2230, var(--card));
+        padding: 1rem;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.35rem;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      button {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.45rem 0.65rem;
+        font: inherit;
+        font-weight: 700;
+        background: #b8e9ff;
+        color: #042435;
+        cursor: pointer;
+      }
+
+      .rows {
+        margin-top: 0.8rem;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 3ch minmax(0, 1fr) max-content;
+        gap: 0.6rem;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.52rem 0.65rem;
+        background: #0b1f2a;
+      }
+
+      .score {
+        color: var(--score);
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="panel">
+      <div class="header">
+        <h1>Snake Workshop Leaderboard</h1>
+        <button id="refresh">Refresh</button>
+      </div>
+      <p class="muted" id="status">Loading...</p>
+      <div id="rows" class="rows"></div>
+    </section>
+
+    <script>
+      const API =
+        "https://leaderboard-5d2f6-default-rtdb.europe-west1.firebasedatabase.app/leaderboard.json";
+
+      const status = document.getElementById("status");
+      const rows = document.getElementById("rows");
+
+      function escapeHtml(text) {
+        return String(text)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      async function loadBoard() {
+        status.textContent = "Loading...";
+        rows.innerHTML = "";
+
+        try {
+          const res = await fetch(API);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+          const data = (await res.json()) || {};
+          const top = Object.entries(data)
+            .map(([name, entry]) => ({
+              name,
+              score: Number(entry?.score) || 0,
+              language: entry?.language || "",
+              difficulty: entry?.difficulty || "",
+              timestamp: Number(entry?.timestamp) || 0
+            }))
+            .sort((a, b) => {
+              if (b.score !== a.score) return b.score - a.score;
+              return b.timestamp - a.timestamp;
+            })
+            .slice(0, 20);
+
+          status.textContent = `Showing ${top.length} entries. Auto-refresh every 15 seconds.`;
+
+          if (!top.length) {
+            rows.innerHTML = "<div class='row'>No scores yet.</div>";
+            return;
+          }
+
+          top.forEach((entry, idx) => {
+            const el = document.createElement("div");
+            el.className = "row";
+            el.innerHTML = `<div>${idx + 1}.</div><div>${escapeHtml(entry.name)} <span class='muted'>(${escapeHtml(
+              entry.language
+            )} / ${escapeHtml(entry.difficulty)})</span></div><div class='score'>${entry.score}</div>`;
+            rows.appendChild(el);
+          });
+        } catch (err) {
+          status.textContent = `Failed to fetch leaderboard: ${err.message}`;
+        }
+      }
+
+      document.getElementById("refresh").addEventListener("click", loadBoard);
+      loadBoard();
+      setInterval(loadBoard, 15000);
+    </script>
+  </body>
+</html>
